@@ -13,6 +13,14 @@ public class Book
     
     
     //Relationships
+    //one to one
     public PriceOffer PriceOffer { get; set; }
+    // a book can have many reviews (one to many)
+    public ICollection<Review> Reviews { get; set; }
+    //many to many
+    public ICollection<Category> Categories { get; set; }
     
-}
+    //relationship attributes
+    public ICollection<BookAuthor> AuthorsLink { get; set; }
+
+} 

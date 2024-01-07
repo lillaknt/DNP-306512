@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCConsoleApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240106213738_InitialCreate")]
+    [Migration("20240107121253_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -43,6 +43,45 @@ namespace EFCConsoleApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("PromotionalPrice")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PromotionalText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId")
+                        .IsUnique();
+
+                    b.ToTable("PriceOffers");
+                });
+
+            modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
+                {
+                    b.HasOne("EFCConsoleApp.Entities.Book", null)
+                        .WithOne("PriceOffer")
+                        .HasForeignKey("EFCConsoleApp.Entities.PriceOffer", "BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EFCConsoleApp.Entities.Book", b =>
+                {
+                    b.Navigation("PriceOffer")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

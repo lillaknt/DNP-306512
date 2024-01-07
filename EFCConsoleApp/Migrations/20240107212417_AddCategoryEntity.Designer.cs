@@ -11,14 +11,29 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCConsoleApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20240107115509_AddPriceOffer")]
-    partial class AddPriceOffer
+    [Migration("20240107212417_AddCategoryEntity")]
+    partial class AddCategoryEntity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
+
+            modelBuilder.Entity("BookCategory", b =>
+                {
+                    b.Property<int>("BooksId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoriesName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("BooksId", "CategoriesName");
+
+                    b.HasIndex("CategoriesName");
+
+                    b.ToTable("BookCategory");
+                });
 
             modelBuilder.Entity("EFCConsoleApp.Entities.Book", b =>
                 {
@@ -45,6 +60,16 @@ namespace EFCConsoleApp.Migrations
                     b.ToTable("Books");
                 });
 
+            modelBuilder.Entity("EFCConsoleApp.Entities.Category", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Name");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
                 {
                     b.Property<int>("Id")
@@ -66,7 +91,49 @@ namespace EFCConsoleApp.Migrations
                     b.HasIndex("BookId")
                         .IsUnique();
 
-                    b.ToTable("PriceOffer");
+                    b.ToTable("PriceOffers");
+                });
+
+            modelBuilder.Entity("EFCConsoleApp.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VoterName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("BookCategory", b =>
+                {
+                    b.HasOne("EFCConsoleApp.Entities.Book", null)
+                        .WithMany()
+                        .HasForeignKey("BooksId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EFCConsoleApp.Entities.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesName")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
@@ -78,10 +145,21 @@ namespace EFCConsoleApp.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("EFCConsoleApp.Entities.Review", b =>
+                {
+                    b.HasOne("EFCConsoleApp.Entities.Book", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("EFCConsoleApp.Entities.Book", b =>
                 {
                     b.Navigation("PriceOffer")
                         .IsRequired();
+
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using System;
 using EFCConsoleApp.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,42 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EFCConsoleApp.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    partial class MyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240107201126_AddReviewEntity")]
+    partial class AddReviewEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.14");
-
-            modelBuilder.Entity("BookCategory", b =>
-                {
-                    b.Property<int>("BooksId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CategoriesName")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("BooksId", "CategoriesName");
-
-                    b.HasIndex("CategoriesName");
-
-                    b.ToTable("BookCategory");
-                });
-
-            modelBuilder.Entity("EFCConsoleApp.Entities.Author", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Author");
-                });
 
             modelBuilder.Entity("EFCConsoleApp.Entities.Book", b =>
                 {
@@ -70,34 +43,6 @@ namespace EFCConsoleApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("EFCConsoleApp.Entities.BookAuthor", b =>
-                {
-                    b.Property<int>("BookId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Order")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("BookId", "AuthorId");
-
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("BookAuthor");
-                });
-
-            modelBuilder.Entity("EFCConsoleApp.Entities.Category", b =>
-                {
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Name");
-
-                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
@@ -151,40 +96,6 @@ namespace EFCConsoleApp.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("BookCategory", b =>
-                {
-                    b.HasOne("EFCConsoleApp.Entities.Book", null)
-                        .WithMany()
-                        .HasForeignKey("BooksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCConsoleApp.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesName")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("EFCConsoleApp.Entities.BookAuthor", b =>
-                {
-                    b.HasOne("EFCConsoleApp.Entities.Author", "Author")
-                        .WithMany("BooksLink")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EFCConsoleApp.Entities.Book", "Book")
-                        .WithMany("AuthorsLink")
-                        .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
-
-                    b.Navigation("Book");
-                });
-
             modelBuilder.Entity("EFCConsoleApp.Entities.PriceOffer", b =>
                 {
                     b.HasOne("EFCConsoleApp.Entities.Book", null)
@@ -203,15 +114,8 @@ namespace EFCConsoleApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EFCConsoleApp.Entities.Author", b =>
-                {
-                    b.Navigation("BooksLink");
-                });
-
             modelBuilder.Entity("EFCConsoleApp.Entities.Book", b =>
                 {
-                    b.Navigation("AuthorsLink");
-
                     b.Navigation("PriceOffer")
                         .IsRequired();
 
