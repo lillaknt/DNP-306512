@@ -10,4 +10,9 @@ public class Book
     public DateTime PublishDate { get; set; }
     public decimal Price { get; set; }
     public string Publisher { get; set; }
+    
+    
+    //Relationships
+    public PriceOffer PriceOffer { get; set; }
+    
 }
