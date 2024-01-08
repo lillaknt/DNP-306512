@@ -2,8 +2,6 @@
 
 using EFCConsoleApp.DataAccess;
 using EFCConsoleApp.Entities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 ////////////////////////////////////////////////////////////////
 // ******** To add new book ***********
@@ -41,8 +39,6 @@ async Task<Book> AddBookAsync(Book book)
 */
 
 
-
-
 ////////////////////////////////////////////////////////////////
 // ************** Update the entire book *********
 Book bookToUpdate = new()
@@ -61,8 +57,6 @@ async Task UpdateBookAsync(Book bookToUpdate)
     await using MyDbContext context = new();
     context.Books.Update(bookToUpdate);
     await context.SaveChangesAsync();
-    
-    
 }
 
 ////////////////////////////////////////////////////////////////
@@ -73,9 +67,9 @@ async Task UpdateBookAsync(Book bookToUpdate)
 async Task<Book?> GetBookByIdAsync(int id)
 {
     await using MyDbContext context = new();
-    Book? foundBook = await context.Books.FindAsync(id);
+    var foundBook = await context.Books.FindAsync(id);
     return foundBook;
-} 
+}
 
 ////////////////////////////////////////////////////////////////
 //******* Update book by retrieving the book by Id first and using that to update a property of the book:
@@ -120,7 +114,7 @@ async Task AddPriceOfferAsync(PriceOffer po)
     await using MyDbContext context = new();
     await context.PriceOffers.AddAsync(po);
     await context.SaveChangesAsync();
-    
+
 }
 
 PriceOffer po = new()
@@ -152,7 +146,6 @@ PriceOffer po2 = new()
 
 await AddPriceOfferToBook(po2, 2);
 */
-
 
 
 ////////////////////////////////////////////////////////////////
@@ -249,7 +242,7 @@ Book bookWithReviewAndPo = await GetBookWithReviewAndPOAsync(2);
 
 ////////////////////////////////////////////////////////////////
 /// ********** Many to many relationship interactions
-
+/*
 await AddCategoryToBookAsync("Disney", 1);
 
 async Task AddCategoryToBookAsync(string cat, int bookId)
@@ -265,10 +258,41 @@ async Task AddCategoryToBookAsync(string cat, int bookId)
     Category? existingCategory = await context.Categories
       .Include(ca => ca.Books)
         .FirstOrDefaultAsync(ca => ca.Name.Equals(cat));
-    
+
     //Adding the selected category to the existing selected book
     existingCategory.Books.Add(existingBoox);
     context.Categories.Update(existingCategory);
     await context.SaveChangesAsync();
 
 }
+*/
+/*
+async Task AddAuthorToBookAsync(int authorId, int bookId, int order)
+{
+    //new link between author and book
+    BookAuthor bookAuthor = new()
+    {
+        AuthorId = authorId,
+        BookId = bookId,
+        Order = order
+    };
+
+    await  using MyDbContext context = new();
+
+    //add this link
+    await context.Set<BookAuthor>().AddAsync(bookAuthor);
+    await context.SaveChangesAsync();
+}
+
+await AddAuthorToBookAsync(1,1,1);
+await AddAuthorToBookAsync(2,1,2);
+*/
+
+/*
+await  using MyDbContext context = new();
+context.Books.Include(book => book.AuthorsLink)
+    .ThenInclude(ba => ba.Author)
+    .Include(book => book.Reviews)
+    .First();
+
+    */

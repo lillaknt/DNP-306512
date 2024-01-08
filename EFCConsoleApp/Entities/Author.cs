@@ -7,5 +7,4 @@ public class Author
 
     // relationships
     public ICollection<BookAuthor> BooksLink { get; set; }
-
 }

@@ -9,5 +9,4 @@ public class BookAuthor
     // relationships
     public Book Book { get; set; }
     public Author Author { get; set; }
-    
 }
